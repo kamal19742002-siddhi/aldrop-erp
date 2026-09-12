@@ -3,291 +3,356 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SmartAldrop Pro ERP</title>
-  <meta name="theme-color" content="#1e3a8a" />
-
+  <title>SmartAldrop Enterprise ERP</title>
+  <meta name="theme-color" content="#0f172a" />
   <style>
     :root {
-      --primary: #1e3a8a;
-      --accent: #059669;
-      --bg: #f1f5f9;
-      --surface: #ffffff;
-      --border: #cbd5e1;
-      --text: #0f172a;
-      --text-muted: #64748b;
+      --primary: #0f172a;
+      --accent: #2563eb;
+      --success: #059669;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding: 12px; display: flex; flex-direction: column; align-items: center; }
+    body { background-color: var(--bg); color: var(--text); padding: 16px; display: flex; flex-direction: column; align-items: center; }
     
-    /* 1-Click Install Banner for Layman */
     #installBanner {
-      display: none;
-      width: 100%;
-      max-width: 760px;
-      background: #ecfdf5;
-      border: 2px solid #10b981;
-      padding: 12px 16px;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      justify-content: space-between;
-      align-items: center;
+      display: none; width: 100%; max-width: 900px; background: #ecfdf5; border: 2px solid #10b981;
+      padding: 10px 16px; border-radius: 10px; margin-bottom: 12px; justify-content: space-between; align-items: center;
     }
-    #installBanner button {
-      background: #059669;
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
+    #installBanner button { background: #059669; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 700; cursor: pointer; }
 
-    .container { width: 100%; max-width: 760px; background: var(--surface); border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); padding: 20px; }
-    .top-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 12px; margin-bottom: 16px; }
-    .brand h1 { font-size: 1.3rem; color: var(--primary); font-weight: 800; }
-    .brand p { font-size: 0.75rem; color: var(--text-muted); }
+    .erp-container { width: 100%; max-width: 900px; background: var(--card); border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); padding: 24px; }
     
-    .section-title { font-size: 0.95rem; font-weight: 700; color: var(--primary); margin: 16px 0 8px 0; border-left: 3px solid var(--primary); padding-left: 8px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-    .form-group { display: flex; flex-direction: column; gap: 3px; }
-    label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); }
-    input, select { padding: 9px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.88rem; outline: none; background: #fff; }
-    input:focus, select:focus { border-color: var(--primary); }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 16px; margin-bottom: 16px; }
+    .header h1 { font-size: 1.4rem; color: var(--primary); }
+    .header p { font-size: 0.8rem; color: var(--muted); }
+    
+    .section-title { font-size: 0.95rem; font-weight: 700; color: var(--accent); margin: 18px 0 10px 0; border-left: 4px solid var(--accent); padding-left: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    label { font-size: 0.75rem; font-weight: 600; color: var(--muted); }
+    input, select { padding: 9px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; outline: none; background: #fff; }
+    input:focus, select:focus { border-color: var(--accent); }
 
-    .summary-card { margin-top: 20px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 16px; }
-    .summary-card h3 { font-size: 1rem; color: var(--primary); margin-bottom: 12px; }
+    /* Visual Cost Bar */
+    .cost-bar-container { margin: 20px 0 10px 0; }
+    .cost-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: #e2e8f0; }
+    .bar-mat { background: #3b82f6; }
+    .bar-proc { background: #f59e0b; }
+    .bar-profit { background: #10b981; }
+    .bar-tax { background: #8b5cf6; }
+    .bar-legend { display: flex; gap: 12px; font-size: 0.75rem; margin-top: 6px; color: var(--muted); flex-wrap: wrap; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+
+    /* Summary & Batch Cards */
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+    @media (max-width: 680px) { .dashboard-grid { grid-template-columns: 1fr; } }
+    
+    .card-box { padding: 16px; border-radius: 10px; border: 1px solid var(--border); }
+    .card-single { background: #eff6ff; border-color: #bfdbfe; }
+    .card-batch { background: #f0fdf4; border-color: #bbf7d0; }
+    .card-box h3 { font-size: 1rem; margin-bottom: 12px; color: var(--primary); }
     .row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px; }
-    .row.highlight { font-weight: 700; border-top: 1px dashed #93c5fd; padding-top: 8px; margin-top: 8px; }
-    .row.selling { font-size: 1.25rem; font-weight: 800; color: #065f46; background: #d1fae5; padding: 10px; border-radius: 8px; margin-top: 8px; }
-
-    .btn-group { display: flex; gap: 10px; margin-top: 16px; }
+    .row.total { font-weight: 800; font-size: 1.15rem; border-top: 1px dashed #cbd5e1; padding-top: 8px; margin-top: 8px; color: var(--primary); }
+    
+    .btn-actions { display: flex; gap: 10px; margin-top: 20px; }
     .btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; text-align: center; }
     .btn-save { background: var(--primary); color: white; }
-    .btn-print { background: #475569; color: white; }
+    .btn-print { background: var(--accent); color: white; }
 
     @media print {
       body { background: white; padding: 0; }
-      .container { box-shadow: none; max-width: 100%; }
-      #installBanner, .btn-group, .top-actions { display: none !important; }
+      .erp-container { box-shadow: none; max-width: 100%; border: none; padding: 0; }
+      #installBanner, .btn-actions, .no-print { display: none !important; }
     }
   </style>
 </head>
 <body>
 
-<!-- Direct One-Click Install Box for Non-Tech Users -->
 <div id="installBanner">
   <div>
-    <strong style="color:#065f46; font-size: 0.95rem;">📱 Direct App Install Karein</strong>
-    <p style="font-size: 0.75rem; color:#047857;">Bina browser ke phone screen par chalayein</p>
+    <strong>📲 Install Enterprise App</strong>
+    <p style="font-size: 0.75rem; color:#065f46;">One-tap install on your phone or PC</p>
   </div>
-  <button id="installBtn">Install App</button>
+  <button id="installBtn">Install</button>
 </div>
 
-<div class="container">
-  <div class="top-bar">
-    <div class="brand">
-      <h1>SmartAldrop Pro ERP</h1>
-      <p>Precision Cost Estimator & BOM System</p>
+<div class="erp-container">
+  <div class="header">
+    <div>
+      <h1>Aldrop Precision Manufacturing ERP</h1>
+      <p>BOM Estimator, Scrap Recovery & Production Batch Costing</p>
     </div>
-    <button onclick="window.print()" style="padding: 6px 12px; border: 1px solid var(--primary); background: #eff6ff; color: var(--primary); border-radius: 6px; font-weight: 600; cursor: pointer;">🖨️ Print</button>
+    <button class="no-print" onclick="window.print()" style="padding: 8px 14px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; background: #fff; font-weight: 600;">🖨️ PDF / Print</button>
   </div>
 
-  <div class="section-title">1. Raw Material & Weights</div>
-  <div class="grid-3">
+  <!-- Section 1: Preset & Material -->
+  <div class="section-title">1. Item Master & Material Specs</div>
+  <div class="grid-4">
     <div class="form-group">
-      <label>Aldrop Length / Type</label>
-      <select id="modelType">
-        <option value="10_inch">10 Inch Standard</option>
-        <option value="12_inch">12 Inch Heavy</option>
-        <option value="8_inch">8 Inch Slim</option>
+      <label>Product Master Preset</label>
+      <select id="presetSelect" onchange="applyPreset()">
+        <option value="custom">Custom Configuration</option>
+        <option value="10_floral" selected>10" SS304 Laser Floral (Deluxe)</option>
+        <option value="10_plain">10" SS202 Plain Standard</option>
+        <option value="12_pvd">12" SS304 Heavy PVD Gold</option>
+        <option value="8_slim">8" SS202 Slim Latch</option>
       </select>
     </div>
     <div class="form-group">
       <label>SS Grade</label>
       <select id="ssGrade">
         <option value="202">SS 202</option>
-        <option value="304">SS 304</option>
+        <option value="304" selected>SS 304</option>
       </select>
     </div>
     <div class="form-group">
-      <label>Metal Rate (₹/kg)</label>
-      <input type="number" id="matRate" value="180" />
+      <label>Prime Metal Rate (₹/kg)</label>
+      <input type="number" id="matRate" value="210" />
     </div>
+    <div class="form-group">
+      <label>Scrap Buyback Rate (₹/kg)</label>
+      <input type="number" id="scrapRate" value="95" />
+    </div>
+  </div>
+
+  <div class="grid-4" style="margin-top: 10px;">
     <div class="form-group">
       <label>Plate Gross Wt (gm)</label>
       <input type="number" id="plateWt" value="260" />
     </div>
     <div class="form-group">
-      <label>Rod / Bolt Wt (gm)</label>
+      <label>Rod/Bolt Wt (gm)</label>
       <input type="number" id="rodWt" value="180" />
     </div>
     <div class="form-group">
-      <label>Scrap Wt (gm)</label>
-      <input type="number" id="scrapWt" value="40" />
+      <label>Scrap Loss (gm)</label>
+      <input type="number" id="scrapWt" value="45" />
+    </div>
+    <div class="form-group">
+      <label>Batch Order Qty (Pieces)</label>
+      <input type="number" id="batchQty" value="500" />
     </div>
   </div>
 
-  <div class="section-title">2. Processing, Finishing & Plating</div>
-  <div class="grid-3">
+  <!-- Section 2: Operations & Finishes -->
+  <div class="section-title">2. Processing, Hardware & Finishes</div>
+  <div class="grid-4">
     <div class="form-group">
-      <label>Stamping/Bending (₹)</label>
-      <input type="number" id="pressCost" value="6.00" />
+      <label>Blanking & Press Work (₹)</label>
+      <input type="number" id="pressCost" value="6.50" />
     </div>
     <div class="form-group">
-      <label>Laser Etching (₹)</label>
+      <label>Fiber Laser Marking (₹)</label>
       <input type="number" id="laserCost" value="8.00" />
     </div>
     <div class="form-group">
-      <label>Mirror Polish (₹)</label>
-      <input type="number" id="buffingCost" value="9.00" />
+      <label>Buffing / High Mirror (₹)</label>
+      <input type="number" id="buffCost" value="9.00" />
     </div>
     <div class="form-group">
-      <label>Special Plating</label>
-      <select id="coatingType">
-        <option value="0">None / Standard Buff</option>
-        <option value="25">PVD Gold (+₹25)</option>
+      <label>Surface Plating / Coat</label>
+      <select id="coatingCost">
+        <option value="0">None / Pure Polished</option>
+        <option value="26">PVD Titanium Gold (+₹26)</option>
         <option value="30">PVD Rose Gold (+₹30)</option>
-        <option value="12">Black Matte (+₹12)</option>
-        <option value="18">Antique Brass (+₹18)</option>
+        <option value="12">Matt Black Powder (+₹12)</option>
+        <option value="18">Antique Copper/Brass (+₹18)</option>
       </select>
-    </div>
-    <div class="form-group">
-      <label>Hardware (Bush/Screws) (₹)</label>
-      <input type="number" id="hardwareCost" value="5.00" />
-    </div>
-    <div class="form-group">
-      <label>Packaging Box (₹)</label>
-      <input type="number" id="packCost" value="5.50" />
     </div>
   </div>
 
-  <div class="section-title">3. Overheads, Margins & Tax</div>
-  <div class="grid-3">
+  <div class="grid-4" style="margin-top: 10px;">
     <div class="form-group">
-      <label>Overhead (%)</label>
+      <label>Bush, Screws & Fasteners (₹)</label>
+      <input type="number" id="hardwareCost" value="5.50" />
+    </div>
+    <div class="form-group">
+      <label>Inner Box & Corrugation (₹)</label>
+      <input type="number" id="packCost" value="6.00" />
+    </div>
+    <div class="form-group">
+      <label>Factory Overheads (%)</label>
       <input type="number" id="overheadPct" value="8" />
     </div>
     <div class="form-group">
-      <label>Profit Margin (%)</label>
+      <label>Target Profit Margin (%)</label>
       <input type="number" id="marginPct" value="18" />
     </div>
-    <div class="form-group">
-      <label>GST Rate (%)</label>
-      <select id="gstRate">
-        <option value="18">18% GST</option>
-        <option value="0">0% (Without GST)</option>
-      </select>
+  </div>
+
+  <!-- Cost Composition Progress Bar -->
+  <div class="cost-bar-container no-print">
+    <label style="font-weight: 700;">Cost Distribution Visualizer</label>
+    <div class="cost-bar">
+      <div id="barMat" class="bar-mat" style="width: 50%;"></div>
+      <div id="barProc" class="bar-proc" style="width: 25%;"></div>
+      <div id="barProfit" class="bar-profit" style="width: 15%;"></div>
+      <div id="barTax" class="bar-tax" style="width: 10%;"></div>
+    </div>
+    <div class="bar-legend">
+      <span><span class="legend-dot" style="background:#3b82f6;"></span>Material</span>
+      <span><span class="legend-dot" style="background:#f59e0b;"></span>Operations</span>
+      <span><span class="legend-dot" style="background:#10b981;"></span>Net Profit</span>
+      <span><span class="legend-dot" style="background:#8b5cf6;"></span>GST (18%)</span>
     </div>
   </div>
 
-  <div class="summary-card">
-    <h3>Cost Breakdown (Per Piece)</h3>
-    <div class="row"><span>Net Weight:</span><strong id="outNetWeight">400 gm</strong></div>
-    <div class="row"><span>Net Material Cost:</span><strong id="outMatCost">₹75.80</strong></div>
-    <div class="row"><span>Job Work & Plating:</span><strong id="outJobCost">₹33.50</strong></div>
-    <div class="row highlight"><span>Factory Cost (Ex. Tax):</span><span id="outProdCost">₹118.04</span></div>
-    <div class="row"><span>Profit Margin:</span><strong id="outProfit">₹21.25</strong></div>
-    <div class="row"><span>GST:</span><strong id="outGst">₹25.07</strong></div>
-    <div class="row selling"><span>Final Price:</span><span id="outFinalPrice">₹164.36</span></div>
+  <!-- Dashboards: Per Piece vs Batch Order -->
+  <div class="dashboard-grid">
+    <div class="card-box card-single">
+      <h3>Unit Cost Analysis (1 Piece)</h3>
+      <div class="row"><span>Net Finished Weight:</span><strong id="outNetWeight">395 gm</strong></div>
+      <div class="row"><span>Net Raw Material:</span><strong id="outMatCost">₹88.13</strong></div>
+      <div class="row"><span>Processing & Plating:</span><strong id="outProcCost">₹35.00</strong></div>
+      <div class="row"><span>Factory Overhead:</span><strong id="outOverhead">₹9.85</strong></div>
+      <div class="row"><span>Target Profit:</span><strong id="outProfit">₹23.94</strong></div>
+      <div class="row total"><span>Selling Price (Ex. GST):</span><span id="outUnitExTax">₹156.92</span></div>
+      <div class="row" style="color: #047857; font-weight:700; margin-top:4px;"><span>Final Price (Inc. 18% GST):</span><span id="outUnitIncTax">₹185.16</span></div>
+    </div>
+
+    <div class="card-box card-batch">
+      <h3>Bulk Order Batch (<span id="outBatchQtyLabel">500</span> Pcs)</h3>
+      <div class="row"><span>Total Raw Sheet Needed:</span><strong id="outBatchSheet">130.0 kg</strong></div>
+      <div class="row"><span>Total Rod Stock Needed:</span><strong id="outBatchRod">90.0 kg</strong></div>
+      <div class="row"><span>Total Scrap Recoverable:</span><strong id="outBatchScrap">22.5 kg</strong></div>
+      <div class="row"><span>Net Material Capital:</span><strong id="outBatchMatCap">₹44,065</strong></div>
+      <div class="row"><span>Total Production Overhead:</span><strong id="outBatchOpCost">₹22,425</strong></div>
+      <div class="row total"><span>Batch Order Value:</span><span id="outBatchTotalVal">₹78,460</span></div>
+      <div class="row" style="color: #047857; font-weight:700; margin-top:4px;"><span>Invoice Total (With GST):</span><span id="outBatchInvoice">₹92,582</span></div>
+    </div>
   </div>
 
-  <div class="btn-group">
-    <button class="btn btn-save" onclick="saveSettings()">💾 Save Rates</button>
-    <button class="btn btn-print" onclick="window.print()">📄 PDF Export</button>
+  <div class="btn-actions no-print">
+    <button class="btn btn-save" onclick="saveActiveSettings()">💾 Save Custom Configuration</button>
+    <button class="btn btn-print" onclick="window.print()">📄 Export Professional PDF</button>
   </div>
 </div>
 
 <script>
-  // 1-Click Install Logic
-  let deferredPrompt;
-  const installBanner = document.getElementById('installBanner');
-  const installBtn = document.getElementById('installBtn');
+  // Presets Data
+  const presets = {
+    '10_floral': { plateWt: 260, rodWt: 180, scrapWt: 45, pressCost: 6.5, laserCost: 8, buffCost: 9, coatingCost: 0, hardwareCost: 5.5, packCost: 6 },
+    '10_plain': { plateWt: 240, rodWt: 170, scrapWt: 35, pressCost: 5, laserCost: 0, buffCost: 7, coatingCost: 0, hardwareCost: 4.5, packCost: 5 },
+    '12_pvd': { plateWt: 320, rodWt: 220, scrapWt: 55, pressCost: 8, laserCost: 10, buffCost: 12, coatingCost: 26, hardwareCost: 7, packCost: 8 },
+    '8_slim': { plateWt: 180, rodWt: 130, scrapWt: 25, pressCost: 4.5, laserCost: 0, buffCost: 6, coatingCost: 0, hardwareCost: 4, packCost: 4.5 }
+  };
 
+  function applyPreset() {
+    const val = document.getElementById('presetSelect').value;
+    if (presets[val]) {
+      for (const [key, num] of Object.entries(presets[val])) {
+        if (document.getElementById(key)) document.getElementById(key).value = num;
+      }
+      calculateAll();
+    }
+  }
+
+  // PWA Install Prompt
+  let pwaPrompt;
+  const banner = document.getElementById('installBanner');
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
-    deferredPrompt = e;
-    installBanner.style.display = 'flex';
+    pwaPrompt = e;
+    banner.style.display = 'flex';
   });
-
-  installBtn.addEventListener('click', async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        installBanner.style.display = 'none';
-      }
-      deferredPrompt = null;
+  document.getElementById('installBtn').addEventListener('click', async () => {
+    if (pwaPrompt) {
+      pwaPrompt.prompt();
+      pwaPrompt = null;
+      banner.style.display = 'none';
     }
   });
 
-  // Cost Logic
   const inputs = document.querySelectorAll('input, select');
+  inputs.forEach(el => el.addEventListener('input', calculateAll));
 
-  function calculate() {
+  function calculateAll() {
     const matRate = parseFloat(document.getElementById('matRate').value) || 0;
+    const scrapRate = parseFloat(document.getElementById('scrapRate').value) || 0;
     const plateWt = parseFloat(document.getElementById('plateWt').value) || 0;
     const rodWt = parseFloat(document.getElementById('rodWt').value) || 0;
     const scrapWt = parseFloat(document.getElementById('scrapWt').value) || 0;
-    const scrapRate = matRate * 0.45;
+    const batchQty = parseInt(document.getElementById('batchQty').value) || 1;
 
-    const pressCost = parseFloat(document.getElementById('pressCost').value) || 0;
-    const laserCost = parseFloat(document.getElementById('laserCost').value) || 0;
-    const buffingCost = parseFloat(document.getElementById('buffingCost').value) || 0;
-    const coatingCost = parseFloat(document.getElementById('coatingType').value) || 0;
-    const hardwareCost = parseFloat(document.getElementById('hardwareCost').value) || 0;
-    const packCost = parseFloat(document.getElementById('packCost').value) || 0;
+    const press = parseFloat(document.getElementById('pressCost').value) || 0;
+    const laser = parseFloat(document.getElementById('laserCost').value) || 0;
+    const buff = parseFloat(document.getElementById('buffCost').value) || 0;
+    const coat = parseFloat(document.getElementById('coatingCost').value) || 0;
+    const hard = parseFloat(document.getElementById('hardwareCost').value) || 0;
+    const pack = parseFloat(document.getElementById('packCost').value) || 0;
 
-    const overheadPct = parseFloat(document.getElementById('overheadPct').value) || 0;
+    const ovhPct = parseFloat(document.getElementById('overheadPct').value) || 0;
     const marginPct = parseFloat(document.getElementById('marginPct').value) || 0;
-    const gstRate = parseFloat(document.getElementById('gstRate').value) || 0;
 
-    const grossWeight = plateWt + rodWt;
-    const netWeight = Math.max(0, grossWeight - scrapWt);
+    // Unit Calculation
+    const grossWt = plateWt + rodWt;
+    const netWt = Math.max(0, grossWt - scrapWt);
 
-    const grossMatCost = (grossWeight / 1000) * matRate;
-    const scrapCredit = (scrapWt / 1000) * scrapRate;
-    const netMatCost = Math.max(0, grossMatCost - scrapCredit);
+    const grossMatCost = (grossWt / 1000) * matRate;
+    const scrapRecovery = (scrapWt / 1000) * scrapRate;
+    const netMatCost = Math.max(0, grossMatCost - scrapRecovery);
 
-    const totalJobCost = pressCost + laserCost + buffingCost + coatingCost + hardwareCost + packCost;
-    const primeCost = netMatCost + totalJobCost;
-    const overhead = primeCost * (overheadPct / 100);
-    const prodCost = primeCost + overhead;
+    const totalOps = press + laser + buff + coat + hard + pack;
+    const primeCost = netMatCost + totalOps;
+    const overhead = primeCost * (ovhPct / 100);
+    const factoryCost = primeCost + overhead;
+    const profit = factoryCost * (marginPct / 100);
+    const unitExTax = factoryCost + profit;
+    const unitIncTax = unitExTax * 1.18;
 
-    const profit = prodCost * (marginPct / 100);
-    const saleBeforeTax = prodCost + profit;
-    const gst = saleBeforeTax * (gstRate / 100);
-    const finalPrice = saleBeforeTax + gst;
-
-    document.getElementById('outNetWeight').textContent = netWeight.toFixed(0) + ' gm';
+    // Update Unit UI
+    document.getElementById('outNetWeight').textContent = netWt.toFixed(0) + ' gm';
     document.getElementById('outMatCost').textContent = '₹' + netMatCost.toFixed(2);
-    document.getElementById('outJobCost').textContent = '₹' + totalJobCost.toFixed(2);
-    document.getElementById('outProdCost').textContent = '₹' + prodCost.toFixed(2);
+    document.getElementById('outProcCost').textContent = '₹' + totalOps.toFixed(2);
+    document.getElementById('outOverhead').textContent = '₹' + overhead.toFixed(2);
     document.getElementById('outProfit').textContent = '₹' + profit.toFixed(2);
-    document.getElementById('outGst').textContent = '₹' + gst.toFixed(2);
-    document.getElementById('outFinalPrice').textContent = '₹' + finalPrice.toFixed(2);
+    document.getElementById('outUnitExTax').textContent = '₹' + unitExTax.toFixed(2);
+    document.getElementById('outUnitIncTax').textContent = '₹' + unitIncTax.toFixed(2);
+
+    // Batch Calculation
+    document.getElementById('outBatchQtyLabel').textContent = batchQty;
+    document.getElementById('outBatchSheet').textContent = ((plateWt * batchQty) / 1000).toFixed(1) + ' kg';
+    document.getElementById('outBatchRod').textContent = ((rodWt * batchQty) / 1000).toFixed(1) + ' kg';
+    document.getElementById('outBatchScrap').textContent = ((scrapWt * batchQty) / 1000).toFixed(1) + ' kg';
+    document.getElementById('outBatchMatCap').textContent = '₹' + Math.round(netMatCost * batchQty).toLocaleString('en-IN');
+    document.getElementById('outBatchOpCost').textContent = '₹' + Math.round((totalOps + overhead) * batchQty).toLocaleString('en-IN');
+    document.getElementById('outBatchTotalVal').textContent = '₹' + Math.round(unitExTax * batchQty).toLocaleString('en-IN');
+    document.getElementById('outBatchInvoice').textContent = '₹' + Math.round(unitIncTax * batchQty).toLocaleString('en-IN');
+
+    // Visual Cost Progress Bar
+    const totalWithoutTax = unitExTax;
+    const pMat = (netMatCost / totalWithoutTax) * 100;
+    const pProc = ((totalOps + overhead) / totalWithoutTax) * 100;
+    const pProf = (profit / totalWithoutTax) * 100;
+    document.getElementById('barMat').style.width = pMat + '%';
+    document.getElementById('barProc').style.width = pProc + '%';
+    document.getElementById('barProfit').style.width = pProf + '%';
   }
 
-  function saveSettings() {
-    const data = {};
-    inputs.forEach(input => data[input.id] = input.value);
-    localStorage.setItem('aldrop_erp_preset', JSON.stringify(data));
-    alert('Rates successfully saved!');
+  function saveActiveSettings() {
+    const state = {};
+    inputs.forEach(el => state[el.id] = el.value);
+    localStorage.setItem('smart_aldrop_erp_state', JSON.stringify(state));
+    alert('Factory configuration saved successfully!');
   }
 
-  function loadSettings() {
-    const saved = localStorage.getItem('aldrop_erp_preset');
+  function loadActiveSettings() {
+    const saved = localStorage.getItem('smart_aldrop_erp_state');
     if (saved) {
       const data = JSON.parse(saved);
-      inputs.forEach(input => {
-        if (data[input.id] !== undefined) input.value = data[input.id];
+      inputs.forEach(el => {
+        if (data[el.id] !== undefined) el.value = data[el.id];
       });
     }
   }
 
-  inputs.forEach(input => input.addEventListener('input', calculate));
-  loadSettings();
-  calculate();
+  loadActiveSettings();
+  calculateAll();
 </script>
 
 </body>
