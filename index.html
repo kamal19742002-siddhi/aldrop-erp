@@ -20,25 +20,24 @@
     body { background-color: var(--bg); color: var(--text); padding: 16px; display: flex; flex-direction: column; align-items: center; }
     
     #installBanner {
-      display: none; width: 100%; max-width: 900px; background: #ecfdf5; border: 2px solid #10b981;
+      display: none; width: 100%; max-width: 920px; background: #ecfdf5; border: 2px solid #10b981;
       padding: 10px 16px; border-radius: 10px; margin-bottom: 12px; justify-content: space-between; align-items: center;
     }
     #installBanner button { background: #059669; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 700; cursor: pointer; }
 
-    .erp-container { width: 100%; max-width: 900px; background: var(--card); border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); padding: 24px; }
+    .erp-container { width: 100%; max-width: 920px; background: var(--card); border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); padding: 24px; }
     
     .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 16px; margin-bottom: 16px; }
     .header h1 { font-size: 1.4rem; color: var(--primary); }
     .header p { font-size: 0.8rem; color: var(--muted); }
     
     .section-title { font-size: 0.95rem; font-weight: 700; color: var(--accent); margin: 18px 0 10px 0; border-left: 4px solid var(--accent); padding-left: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
     .form-group { display: flex; flex-direction: column; gap: 4px; }
-    label { font-size: 0.75rem; font-weight: 600; color: var(--muted); }
+    label { font-size: 0.74rem; font-weight: 600; color: var(--muted); }
     input, select { padding: 9px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; outline: none; background: #fff; }
     input:focus, select:focus { border-color: var(--accent); }
 
-    /* Visual Cost Bar */
     .cost-bar-container { margin: 20px 0 10px 0; }
     .cost-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: #e2e8f0; }
     .bar-mat { background: #3b82f6; }
@@ -48,7 +47,6 @@
     .bar-legend { display: flex; gap: 12px; font-size: 0.75rem; margin-top: 6px; color: var(--muted); flex-wrap: wrap; }
     .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
 
-    /* Summary & Batch Cards */
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
     @media (max-width: 680px) { .dashboard-grid { grid-template-columns: 1fr; } }
     
@@ -85,22 +83,22 @@
   <div class="header">
     <div>
       <h1>Aldrop Precision Manufacturing ERP</h1>
-      <p>BOM Estimator, Scrap Recovery & Production Batch Costing</p>
+      <p>Patta, Rod & Kiram BOM Estimator with Scrap Recovery</p>
     </div>
     <button class="no-print" onclick="window.print()" style="padding: 8px 14px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; background: #fff; font-weight: 600;">🖨️ PDF / Print</button>
   </div>
 
-  <!-- Section 1: Preset & Material -->
-  <div class="section-title">1. Item Master & Material Specs</div>
+  <!-- Section 1: Rates & Item Master -->
+  <div class="section-title">1. Rates & Raw Material Specs</div>
   <div class="grid-4">
     <div class="form-group">
       <label>Product Master Preset</label>
       <select id="presetSelect" onchange="applyPreset()">
         <option value="custom">Custom Configuration</option>
-        <option value="10_floral" selected>10" SS304 Laser Floral (Deluxe)</option>
-        <option value="10_plain">10" SS202 Plain Standard</option>
-        <option value="12_pvd">12" SS304 Heavy PVD Gold</option>
-        <option value="8_slim">8" SS202 Slim Latch</option>
+        <option value="10_floral" selected>10" SS304 Deluxe (2 Kiram)</option>
+        <option value="10_plain">10" SS202 Standard (2 Kiram)</option>
+        <option value="12_heavy">12" SS304 Heavy (3 Kiram)</option>
+        <option value="8_slim">8" SS202 Slim (2 Kiram)</option>
       </select>
     </div>
     <div class="form-group">
@@ -120,21 +118,42 @@
     </div>
   </div>
 
+  <!-- Weights: Patta & Rod -->
   <div class="grid-4" style="margin-top: 10px;">
     <div class="form-group">
-      <label>Plate Gross Wt (gm)</label>
+      <label>Patta ka Gross Wt (gm)</label>
       <input type="number" id="plateWt" value="260" />
     </div>
     <div class="form-group">
-      <label>Rod/Bolt Wt (gm)</label>
+      <label>Patte mn Scrap (gm)</label>
+      <input type="number" id="scrapWt" value="40" />
+    </div>
+    <div class="form-group">
+      <label>Rod ka Wt (gm)</label>
       <input type="number" id="rodWt" value="180" />
     </div>
     <div class="form-group">
-      <label>Scrap Loss (gm)</label>
-      <input type="number" id="scrapWt" value="45" />
+      <label>Rod ke Wastage (gm)</label>
+      <input type="number" id="rodScrapWt" value="5" />
+    </div>
+  </div>
+
+  <!-- Weights: Kiram Section -->
+  <div class="grid-4" style="margin-top: 10px;">
+    <div class="form-group">
+      <label>Kiram ka Gross Wt (gm/pc)</label>
+      <input type="number" id="kiramWt" value="35" />
     </div>
     <div class="form-group">
-      <label>Batch Order Qty (Pieces)</label>
+      <label>Kiram Qty (Kitne Kiram)</label>
+      <input type="number" id="kiramQty" value="2" min="1" />
+    </div>
+    <div class="form-group">
+      <label>Kiram mn Scrap (gm/pc)</label>
+      <input type="number" id="kiramScrapWt" value="6" />
+    </div>
+    <div class="form-group">
+      <label>Batch Order Qty (Pcs)</label>
       <input type="number" id="batchQty" value="500" />
     </div>
   </div>
@@ -172,7 +191,7 @@
       <input type="number" id="hardwareCost" value="5.50" />
     </div>
     <div class="form-group">
-      <label>Inner Box & Corrugation (₹)</label>
+      <label>Inner Box & Packaging (₹)</label>
       <input type="number" id="packCost" value="6.00" />
     </div>
     <div class="form-group">
@@ -206,24 +225,24 @@
   <div class="dashboard-grid">
     <div class="card-box card-single">
       <h3>Unit Cost Analysis (1 Piece)</h3>
-      <div class="row"><span>Net Finished Weight:</span><strong id="outNetWeight">395 gm</strong></div>
-      <div class="row"><span>Net Raw Material:</span><strong id="outMatCost">₹88.13</strong></div>
-      <div class="row"><span>Processing & Plating:</span><strong id="outProcCost">₹35.00</strong></div>
-      <div class="row"><span>Factory Overhead:</span><strong id="outOverhead">₹9.85</strong></div>
-      <div class="row"><span>Target Profit:</span><strong id="outProfit">₹23.94</strong></div>
-      <div class="row total"><span>Selling Price (Ex. GST):</span><span id="outUnitExTax">₹156.92</span></div>
-      <div class="row" style="color: #047857; font-weight:700; margin-top:4px;"><span>Final Price (Inc. 18% GST):</span><span id="outUnitIncTax">₹185.16</span></div>
+      <div class="row"><span>Net Finished Weight:</span><strong id="outNetWeight">0 gm</strong></div>
+      <div class="row"><span>Net Raw Material (After Scrap):</span><strong id="outMatCost">₹0.00</strong></div>
+      <div class="row"><span>Processing & Hardware:</span><strong id="outProcCost">₹0.00</strong></div>
+      <div class="row"><span>Factory Overhead:</span><strong id="outOverhead">₹0.00</strong></div>
+      <div class="row"><span>Target Profit:</span><strong id="outProfit">₹0.00</strong></div>
+      <div class="row total"><span>Selling Price (Ex. GST):</span><span id="outUnitExTax">₹0.00</span></div>
+      <div class="row" style="color: #047857; font-weight:700; margin-top:4px;"><span>Final Price (Inc. 18% GST):</span><span id="outUnitIncTax">₹0.00</span></div>
     </div>
 
     <div class="card-box card-batch">
       <h3>Bulk Order Batch (<span id="outBatchQtyLabel">500</span> Pcs)</h3>
-      <div class="row"><span>Total Raw Sheet Needed:</span><strong id="outBatchSheet">130.0 kg</strong></div>
-      <div class="row"><span>Total Rod Stock Needed:</span><strong id="outBatchRod">90.0 kg</strong></div>
-      <div class="row"><span>Total Scrap Recoverable:</span><strong id="outBatchScrap">22.5 kg</strong></div>
-      <div class="row"><span>Net Material Capital:</span><strong id="outBatchMatCap">₹44,065</strong></div>
-      <div class="row"><span>Total Production Overhead:</span><strong id="outBatchOpCost">₹22,425</strong></div>
-      <div class="row total"><span>Batch Order Value:</span><span id="outBatchTotalVal">₹78,460</span></div>
-      <div class="row" style="color: #047857; font-weight:700; margin-top:4px;"><span>Invoice Total (With GST):</span><span id="outBatchInvoice">₹92,582</span></div>
+      <div class="row"><span>Total Patta Sheet Needed:</span><strong id="outBatchSheet">0.0 kg</strong></div>
+      <div class="row"><span>Total Rod Stock Needed:</span><strong id="outBatchRod">0.0 kg</strong></div>
+      <div class="row"><span>Total Kiram Metal Needed:</span><strong id="outBatchKiram">0.0 kg</strong></div>
+      <div class="row"><span>Total Scrap Recoverable:</span><strong id="outBatchScrap">0.0 kg</strong></div>
+      <div class="row"><span>Net Material Capital:</span><strong id="outBatchMatCap">₹0</strong></div>
+      <div class="row total"><span>Batch Order Value:</span><span id="outBatchTotalVal">₹0</span></div>
+      <div class="row" style="color: #047857; font-weight:700; margin-top:4px;"><span>Invoice Total (With GST):</span><span id="outBatchInvoice">₹0</span></div>
     </div>
   </div>
 
@@ -234,12 +253,11 @@
 </div>
 
 <script>
-  // Presets Data
   const presets = {
-    '10_floral': { plateWt: 260, rodWt: 180, scrapWt: 45, pressCost: 6.5, laserCost: 8, buffCost: 9, coatingCost: 0, hardwareCost: 5.5, packCost: 6 },
-    '10_plain': { plateWt: 240, rodWt: 170, scrapWt: 35, pressCost: 5, laserCost: 0, buffCost: 7, coatingCost: 0, hardwareCost: 4.5, packCost: 5 },
-    '12_pvd': { plateWt: 320, rodWt: 220, scrapWt: 55, pressCost: 8, laserCost: 10, buffCost: 12, coatingCost: 26, hardwareCost: 7, packCost: 8 },
-    '8_slim': { plateWt: 180, rodWt: 130, scrapWt: 25, pressCost: 4.5, laserCost: 0, buffCost: 6, coatingCost: 0, hardwareCost: 4, packCost: 4.5 }
+    '10_floral': { plateWt: 260, scrapWt: 40, rodWt: 180, rodScrapWt: 5, kiramWt: 35, kiramQty: 2, kiramScrapWt: 6, pressCost: 6.5, laserCost: 8, buffCost: 9, coatingCost: 0, hardwareCost: 5.5, packCost: 6 },
+    '10_plain': { plateWt: 240, scrapWt: 30, rodWt: 170, rodScrapWt: 5, kiramWt: 30, kiramQty: 2, kiramScrapWt: 5, pressCost: 5, laserCost: 0, buffCost: 7, coatingCost: 0, hardwareCost: 4.5, packCost: 5 },
+    '12_heavy': { plateWt: 320, scrapWt: 50, rodWt: 220, rodScrapWt: 6, kiramWt: 40, kiramQty: 3, kiramScrapWt: 7, pressCost: 8, laserCost: 10, buffCost: 12, coatingCost: 0, hardwareCost: 7, packCost: 8 },
+    '8_slim': { plateWt: 180, scrapWt: 22, rodWt: 130, rodScrapWt: 4, kiramWt: 28, kiramQty: 2, kiramScrapWt: 4, pressCost: 4.5, laserCost: 0, buffCost: 6, coatingCost: 0, hardwareCost: 4, packCost: 4.5 }
   };
 
   function applyPreset() {
@@ -252,7 +270,6 @@
     }
   }
 
-  // PWA Install Prompt
   let pwaPrompt;
   const banner = document.getElementById('installBanner');
   window.addEventListener('beforeinstallprompt', (e) => {
@@ -274,9 +291,17 @@
   function calculateAll() {
     const matRate = parseFloat(document.getElementById('matRate').value) || 0;
     const scrapRate = parseFloat(document.getElementById('scrapRate').value) || 0;
+    
     const plateWt = parseFloat(document.getElementById('plateWt').value) || 0;
-    const rodWt = parseFloat(document.getElementById('rodWt').value) || 0;
     const scrapWt = parseFloat(document.getElementById('scrapWt').value) || 0;
+    
+    const rodWt = parseFloat(document.getElementById('rodWt').value) || 0;
+    const rodScrapWt = parseFloat(document.getElementById('rodScrapWt').value) || 0;
+
+    const kiramWt = parseFloat(document.getElementById('kiramWt').value) || 0;
+    const kiramQty = parseInt(document.getElementById('kiramQty').value) || 0;
+    const kiramScrapWt = parseFloat(document.getElementById('kiramScrapWt').value) || 0;
+
     const batchQty = parseInt(document.getElementById('batchQty').value) || 1;
 
     const press = parseFloat(document.getElementById('pressCost').value) || 0;
@@ -289,12 +314,16 @@
     const ovhPct = parseFloat(document.getElementById('overheadPct').value) || 0;
     const marginPct = parseFloat(document.getElementById('marginPct').value) || 0;
 
-    // Unit Calculation
-    const grossWt = plateWt + rodWt;
-    const netWt = Math.max(0, grossWt - scrapWt);
+    // Weight & Scrap logic with Kiram
+    const totalKiramGross = kiramWt * kiramQty;
+    const totalKiramScrap = kiramScrapWt * kiramQty;
+
+    const grossWt = plateWt + rodWt + totalKiramGross;
+    const totalScrapPerPc = scrapWt + rodScrapWt + totalKiramScrap;
+    const netWt = Math.max(0, grossWt - totalScrapPerPc);
 
     const grossMatCost = (grossWt / 1000) * matRate;
-    const scrapRecovery = (scrapWt / 1000) * scrapRate;
+    const scrapRecovery = (totalScrapPerPc / 1000) * scrapRate;
     const netMatCost = Math.max(0, grossMatCost - scrapRecovery);
 
     const totalOps = press + laser + buff + coat + hard + pack;
@@ -305,7 +334,7 @@
     const unitExTax = factoryCost + profit;
     const unitIncTax = unitExTax * 1.18;
 
-    // Update Unit UI
+    // Single Unit Updates
     document.getElementById('outNetWeight').textContent = netWt.toFixed(0) + ' gm';
     document.getElementById('outMatCost').textContent = '₹' + netMatCost.toFixed(2);
     document.getElementById('outProcCost').textContent = '₹' + totalOps.toFixed(2);
@@ -314,13 +343,13 @@
     document.getElementById('outUnitExTax').textContent = '₹' + unitExTax.toFixed(2);
     document.getElementById('outUnitIncTax').textContent = '₹' + unitIncTax.toFixed(2);
 
-    // Batch Calculation
+    // Batch Updates
     document.getElementById('outBatchQtyLabel').textContent = batchQty;
     document.getElementById('outBatchSheet').textContent = ((plateWt * batchQty) / 1000).toFixed(1) + ' kg';
     document.getElementById('outBatchRod').textContent = ((rodWt * batchQty) / 1000).toFixed(1) + ' kg';
-    document.getElementById('outBatchScrap').textContent = ((scrapWt * batchQty) / 1000).toFixed(1) + ' kg';
+    document.getElementById('outBatchKiram').textContent = ((totalKiramGross * batchQty) / 1000).toFixed(1) + ' kg';
+    document.getElementById('outBatchScrap').textContent = ((totalScrapPerPc * batchQty) / 1000).toFixed(1) + ' kg';
     document.getElementById('outBatchMatCap').textContent = '₹' + Math.round(netMatCost * batchQty).toLocaleString('en-IN');
-    document.getElementById('outBatchOpCost').textContent = '₹' + Math.round((totalOps + overhead) * batchQty).toLocaleString('en-IN');
     document.getElementById('outBatchTotalVal').textContent = '₹' + Math.round(unitExTax * batchQty).toLocaleString('en-IN');
     document.getElementById('outBatchInvoice').textContent = '₹' + Math.round(unitIncTax * batchQty).toLocaleString('en-IN');
 
