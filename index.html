@@ -53,7 +53,8 @@
     .card-box { padding: 16px; border-radius: 10px; border: 1px solid var(--border); }
     .card-single { background: #eff6ff; border-color: #bfdbfe; }
     .card-batch { background: #f0fdf4; border-color: #bbf7d0; }
-    .card-box h3 { font-size: 1rem; margin-bottom: 12px; color: var(--primary); }
+    .card-box h3 { font-size: 0.95rem; margin-bottom: 12px; color: var(--primary); display: flex; flex-direction: column; gap: 3px; }
+    .product-badge { font-size: 0.85rem; color: var(--accent); font-weight: 700; word-break: break-word; }
     .row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px; }
     .row.total { font-weight: 800; font-size: 1.15rem; border-top: 1px dashed #cbd5e1; padding-top: 8px; margin-top: 8px; color: var(--primary); }
     
@@ -91,6 +92,10 @@
   <!-- Section 1: Rates & Item Master -->
   <div class="section-title">1. Rates & Raw Material Specs</div>
   <div class="grid-4">
+    <div class="form-group" style="grid-column: span 2;">
+      <label>Custom Product / Model Name</label>
+      <input type="text" id="customProductName" value='10" SS304 Deluxe (2 Kiram)' placeholder="e.g. 10 inch Antique Floral Aldrop" />
+    </div>
     <div class="form-group">
       <label>Product Master Preset</label>
       <select id="presetSelect" onchange="applyPreset()">
@@ -108,6 +113,9 @@
         <option value="304" selected>SS 304</option>
       </select>
     </div>
+  </div>
+
+  <div class="grid-4" style="margin-top: 10px;">
     <div class="form-group">
       <label>Prime Metal Rate (₹/kg)</label>
       <input type="number" id="matRate" value="210" />
@@ -115,6 +123,14 @@
     <div class="form-group">
       <label>Scrap Buyback Rate (₹/kg)</label>
       <input type="number" id="scrapRate" value="95" />
+    </div>
+    <div class="form-group">
+      <label>Batch Order Qty (Pcs)</label>
+      <input type="number" id="batchQty" value="500" />
+    </div>
+    <div class="form-group">
+      <label>Kiram Qty (Kitne Kiram)</label>
+      <input type="number" id="kiramQty" value="2" min="1" />
     </div>
   </div>
 
@@ -145,16 +161,16 @@
       <input type="number" id="kiramWt" value="35" />
     </div>
     <div class="form-group">
-      <label>Kiram Qty (Kitne Kiram)</label>
-      <input type="number" id="kiramQty" value="2" min="1" />
-    </div>
-    <div class="form-group">
       <label>Kiram mn Scrap (gm/pc)</label>
       <input type="number" id="kiramScrapWt" value="6" />
     </div>
     <div class="form-group">
-      <label>Batch Order Qty (Pcs)</label>
-      <input type="number" id="batchQty" value="500" />
+      <label>Bush, Screws & Fasteners (₹)</label>
+      <input type="number" id="hardwareCost" value="5.50" />
+    </div>
+    <div class="form-group">
+      <label>Inner Box & Packaging (₹)</label>
+      <input type="number" id="packCost" value="6.00" />
     </div>
   </div>
 
@@ -187,14 +203,6 @@
 
   <div class="grid-4" style="margin-top: 10px;">
     <div class="form-group">
-      <label>Bush, Screws & Fasteners (₹)</label>
-      <input type="number" id="hardwareCost" value="5.50" />
-    </div>
-    <div class="form-group">
-      <label>Inner Box & Packaging (₹)</label>
-      <input type="number" id="packCost" value="6.00" />
-    </div>
-    <div class="form-group">
       <label>Factory Overheads (%)</label>
       <input type="number" id="overheadPct" value="8" />
     </div>
@@ -224,7 +232,10 @@
   <!-- Dashboards: Per Piece vs Batch Order -->
   <div class="dashboard-grid">
     <div class="card-box card-single">
-      <h3>Unit Cost Analysis (1 Piece)</h3>
+      <h3>
+        <span>Unit Cost Analysis (1 Piece)</span>
+        <span class="product-badge" id="outDisplayProductNameSingle">10" SS304 Deluxe (2 Kiram)</span>
+      </h3>
       <div class="row"><span>Net Finished Weight:</span><strong id="outNetWeight">0 gm</strong></div>
       <div class="row"><span>Net Raw Material (After Scrap):</span><strong id="outMatCost">₹0.00</strong></div>
       <div class="row"><span>Processing & Hardware:</span><strong id="outProcCost">₹0.00</strong></div>
@@ -235,7 +246,10 @@
     </div>
 
     <div class="card-box card-batch">
-      <h3>Bulk Order Batch (<span id="outBatchQtyLabel">500</span> Pcs)</h3>
+      <h3>
+        <span>Bulk Order Batch (<span id="outBatchQtyLabel">500</span> Pcs)</span>
+        <span class="product-badge" id="outDisplayProductNameBatch">10" SS304 Deluxe (2 Kiram)</span>
+      </h3>
       <div class="row"><span>Total Patta Sheet Needed:</span><strong id="outBatchSheet">0.0 kg</strong></div>
       <div class="row"><span>Total Rod Stock Needed:</span><strong id="outBatchRod">0.0 kg</strong></div>
       <div class="row"><span>Total Kiram Metal Needed:</span><strong id="outBatchKiram">0.0 kg</strong></div>
@@ -261,14 +275,26 @@
   };
 
   function applyPreset() {
-    const val = document.getElementById('presetSelect').value;
+    const sel = document.getElementById('presetSelect');
+    const val = sel.value;
     if (presets[val]) {
       for (const [key, num] of Object.entries(presets[val])) {
         if (document.getElementById(key)) document.getElementById(key).value = num;
       }
+      const selectedLabel = sel.options[sel.selectedIndex].text;
+      document.getElementById('customProductName').value = selectedLabel;
+      updateProductTitles();
       calculateAll();
     }
   }
+
+  function updateProductTitles() {
+    const name = document.getElementById('customProductName').value.trim() || 'Custom Aldrop';
+    document.getElementById('outDisplayProductNameSingle').textContent = name;
+    document.getElementById('outDisplayProductNameBatch').textContent = name;
+  }
+
+  document.getElementById('customProductName').addEventListener('input', updateProductTitles);
 
   let pwaPrompt;
   const banner = document.getElementById('installBanner');
@@ -354,7 +380,7 @@
     document.getElementById('outBatchInvoice').textContent = '₹' + Math.round(unitIncTax * batchQty).toLocaleString('en-IN');
 
     // Visual Cost Progress Bar
-    const totalWithoutTax = unitExTax;
+    const totalWithoutTax = unitExTax || 1;
     const pMat = (netMatCost / totalWithoutTax) * 100;
     const pProc = ((totalOps + overhead) / totalWithoutTax) * 100;
     const pProf = (profit / totalWithoutTax) * 100;
@@ -378,6 +404,7 @@
         if (data[el.id] !== undefined) el.value = data[el.id];
       });
     }
+    updateProductTitles();
   }
 
   loadActiveSettings();
