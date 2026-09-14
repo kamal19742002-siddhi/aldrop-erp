@@ -20,19 +20,19 @@
     body { background-color: var(--bg); color: var(--text); padding: 16px; display: flex; flex-direction: column; align-items: center; }
     
     #installBanner {
-      display: none; width: 100%; max-width: 920px; background: #ecfdf5; border: 2px solid #10b981;
+      display: none; width: 100%; max-width: 980px; background: #ecfdf5; border: 2px solid #10b981;
       padding: 10px 16px; border-radius: 10px; margin-bottom: 12px; justify-content: space-between; align-items: center;
     }
     #installBanner button { background: #059669; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 700; cursor: pointer; }
 
-    .erp-container { width: 100%; max-width: 920px; background: var(--card); border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); padding: 24px; }
+    .erp-container { width: 100%; max-width: 980px; background: var(--card); border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); padding: 24px; }
     
     .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 16px; margin-bottom: 16px; }
-    .header h1 { font-size: 1.4rem; color: var(--primary); }
+    .header h1 { font-size: 1.35rem; color: var(--primary); }
     .header p { font-size: 0.8rem; color: var(--muted); }
     
     .section-title { font-size: 0.95rem; font-weight: 700; color: var(--accent); margin: 18px 0 10px 0; border-left: 4px solid var(--accent); padding-left: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
     .form-group { display: flex; flex-direction: column; gap: 4px; }
     label { font-size: 0.74rem; font-weight: 600; color: var(--muted); }
     input, select { padding: 9px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; outline: none; background: #fff; }
@@ -53,8 +53,9 @@
     .card-box { padding: 16px; border-radius: 10px; border: 1px solid var(--border); }
     .card-single { background: #eff6ff; border-color: #bfdbfe; }
     .card-batch { background: #f0fdf4; border-color: #bbf7d0; }
-    .card-box h3 { font-size: 0.95rem; margin-bottom: 12px; color: var(--primary); display: flex; flex-direction: column; gap: 3px; }
-    .product-badge { font-size: 0.85rem; color: var(--accent); font-weight: 700; word-break: break-word; }
+    .card-box h3 { font-size: 0.95rem; margin-bottom: 12px; color: var(--primary); display: flex; flex-direction: column; gap: 4px; }
+    .product-badge { font-size: 0.88rem; color: var(--accent); font-weight: 700; word-break: break-word; }
+    .spec-badge { font-size: 0.74rem; color: #334155; font-weight: 600; background: rgba(255,255,255,0.85); padding: 4px 8px; border-radius: 4px; display: inline-block; border: 1px solid rgba(0,0,0,0.05); }
     .row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px; }
     .row.total { font-weight: 800; font-size: 1.15rem; border-top: 1px dashed #cbd5e1; padding-top: 8px; margin-top: 8px; color: var(--primary); }
     
@@ -83,39 +84,131 @@
 <div class="erp-container">
   <div class="header">
     <div>
-      <h1>Aldrop Precision Manufacturing ERP</h1>
-      <p>Patta, Rod & Kiram BOM Estimator with Scrap Recovery</p>
+      <h1>Aldrop & Hardware Precision ERP</h1>
+      <p>BOM & Dimensional Estimator for Rod, Patta & Kiram</p>
     </div>
     <button class="no-print" onclick="window.print()" style="padding: 8px 14px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; background: #fff; font-weight: 600;">🖨️ PDF / Print</button>
   </div>
 
-  <!-- Section 1: Rates & Item Master -->
-  <div class="section-title">1. Rates & Raw Material Specs</div>
+  <!-- Section 1: Product Master & Dimensions -->
+  <div class="section-title">1. Product Master & Engineering Dimensions</div>
   <div class="grid-4">
-    <div class="form-group" style="grid-column: span 2;">
-      <label>Custom Product / Model Name</label>
-      <input type="text" id="customProductName" value='10" SS304 Deluxe (2 Kiram)' placeholder="e.g. 10 inch Antique Floral Aldrop" />
-    </div>
     <div class="form-group">
-      <label>Product Master Preset</label>
-      <select id="presetSelect" onchange="applyPreset()">
-        <option value="custom">Custom Configuration</option>
-        <option value="10_floral" selected>10" SS304 Deluxe (2 Kiram)</option>
-        <option value="10_plain">10" SS202 Standard (2 Kiram)</option>
-        <option value="12_heavy">12" SS304 Heavy (3 Kiram)</option>
-        <option value="8_slim">8" SS202 Slim (2 Kiram)</option>
+      <label>Product Master Type</label>
+      <select id="productType" onchange="onProductTypeChange()">
+        <option value="Aldrop" selected>Aldrop</option>
+        <option value="Latch">Door Latch</option>
+        <option value="Handle">Pull Handle</option>
+        <option value="Custom">Other Custom Product</option>
       </select>
+    </div>
+    <div class="form-group" style="grid-column: span 2;">
+      <label>Custom Product / Model Description</label>
+      <input type="text" id="customProductName" value="Deluxe Heavy Sliding Aldrop" placeholder="e.g. 10 inch Antique Floral Aldrop" />
     </div>
     <div class="form-group">
       <label>SS Grade</label>
       <select id="ssGrade">
         <option value="202">SS 202</option>
         <option value="304" selected>SS 304</option>
+        <option value="316">SS 316 (Marine)</option>
       </select>
     </div>
   </div>
 
+  <!-- Length & Widths Row -->
   <div class="grid-4" style="margin-top: 10px;">
+    <div class="form-group">
+      <label>Product Length (Inch / mm)</label>
+      <select id="itemLength">
+        <option value="6&quot; (150mm)">6" (150 mm)</option>
+        <option value="8&quot; (200mm)">8" (200 mm)</option>
+        <option value="10&quot; (250mm)" selected>10" (250 mm)</option>
+        <option value="12&quot; (300mm)">12" (300 mm)</option>
+        <option value="14&quot; (350mm)">14" (350 mm)</option>
+        <option value="16&quot; (400mm)">16" (400 mm)</option>
+        <option value="18&quot; (450mm)">18" (450 mm)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Patta Width (mm)</label>
+      <select id="pattaWidth">
+        <option value="16mm">16 mm (5/8")</option>
+        <option value="19mm">19 mm (3/4")</option>
+        <option value="25mm">25 mm (1")</option>
+        <option value="32mm" selected>32 mm (1-1/4")</option>
+        <option value="38mm">38 mm (1-1/2")</option>
+        <option value="50mm">50 mm (2")</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Patta Thickness (Gauge / mm)</label>
+      <select id="pattaThickness">
+        <option value="1.0mm">1.0 mm (~20 SWG)</option>
+        <option value="1.2mm">1.2 mm (~18 SWG)</option>
+        <option value="1.5mm">1.5 mm (~16 SWG)</option>
+        <option value="2.0mm">2.0 mm (~14 SWG)</option>
+        <option value="2.5mm">2.5 mm (~12 SWG)</option>
+        <option value="3.0mm" selected>3.0 mm (~10 SWG)</option>
+        <option value="4.0mm">4.0 mm (~8 SWG)</option>
+        <option value="5.0mm">5.0 mm</option>
+        <option value="6.0mm">6.0 mm</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Rod Diameter (4mm to 19mm)</label>
+      <select id="rodDiameter">
+        <option value="4mm">Ø 4 mm</option>
+        <option value="6mm">Ø 6 mm</option>
+        <option value="8mm">Ø 8 mm</option>
+        <option value="10mm">Ø 10 mm</option>
+        <option value="12mm" selected>Ø 12 mm</option>
+        <option value="14mm">Ø 14 mm</option>
+        <option value="16mm">Ø 16 mm</option>
+        <option value="18mm">Ø 18 mm</option>
+        <option value="19mm">Ø 19 mm</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Kiram Dimensions & Quantity -->
+  <div class="grid-4" style="margin-top: 10px;">
+    <div class="form-group">
+      <label>Kiram Width (mm)</label>
+      <select id="kiramWidth">
+        <option value="16mm">16 mm</option>
+        <option value="19mm">19 mm</option>
+        <option value="25mm" selected>25 mm</option>
+        <option value="32mm">32 mm</option>
+        <option value="38mm">38 mm</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Kiram Thickness (mm)</label>
+      <select id="kiramThickness">
+        <option value="1.5mm">1.5 mm</option>
+        <option value="2.0mm">2.0 mm</option>
+        <option value="2.5mm">2.5 mm</option>
+        <option value="3.0mm" selected>3.0 mm</option>
+        <option value="4.0mm">4.0 mm</option>
+        <option value="5.0mm">5.0 mm</option>
+        <option value="6.0mm">6.0 mm</option>
+        <option value="8.0mm">8.0 mm</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Kiram Qty (Kitne Kiram)</label>
+      <input type="number" id="kiramQty" value="2" min="1" />
+    </div>
+    <div class="form-group">
+      <label>Batch Order Qty (Pcs)</label>
+      <input type="number" id="batchQty" value="500" />
+    </div>
+  </div>
+
+  <!-- Section 2: Material Weights & Commercial Rates -->
+  <div class="section-title">2. Material Weights & Commercial Rates</div>
+  <div class="grid-4">
     <div class="form-group">
       <label>Prime Metal Rate (₹/kg)</label>
       <input type="number" id="matRate" value="210" />
@@ -124,32 +217,34 @@
       <label>Scrap Buyback Rate (₹/kg)</label>
       <input type="number" id="scrapRate" value="95" />
     </div>
-    <div class="form-group">
-      <label>Batch Order Qty (Pcs)</label>
-      <input type="number" id="batchQty" value="500" />
-    </div>
-    <div class="form-group">
-      <label>Kiram Qty (Kitne Kiram)</label>
-      <input type="number" id="kiramQty" value="2" min="1" />
+    <div class="form-group" style="grid-column: span 2;">
+      <label>Preset Shortcut</label>
+      <select id="presetSelect" onchange="applyPreset()">
+        <option value="custom">Manual Configuration</option>
+        <option value="10_floral" selected>10" Deluxe (2 Kiram)</option>
+        <option value="10_plain">10" Standard (2 Kiram)</option>
+        <option value="12_heavy">12" Heavy (3 Kiram)</option>
+        <option value="8_slim">8" Slim (2 Kiram)</option>
+      </select>
     </div>
   </div>
 
   <!-- Weights: Patta & Rod -->
   <div class="grid-4" style="margin-top: 10px;">
     <div class="form-group">
-      <label>Patta ka Gross Wt (gm)</label>
+      <label>Patta Gross Wt (gm)</label>
       <input type="number" id="plateWt" value="260" />
     </div>
     <div class="form-group">
-      <label>Patte mn Scrap (gm)</label>
+      <label>Patta Scrap Wt (gm)</label>
       <input type="number" id="scrapWt" value="40" />
     </div>
     <div class="form-group">
-      <label>Rod ka Wt (gm)</label>
+      <label>Rod Gross Wt (gm)</label>
       <input type="number" id="rodWt" value="180" />
     </div>
     <div class="form-group">
-      <label>Rod ke Wastage (gm)</label>
+      <label>Rod Scrap Wt (gm)</label>
       <input type="number" id="rodScrapWt" value="5" />
     </div>
   </div>
@@ -157,25 +252,25 @@
   <!-- Weights: Kiram Section -->
   <div class="grid-4" style="margin-top: 10px;">
     <div class="form-group">
-      <label>Kiram ka Gross Wt (gm/pc)</label>
+      <label>Kiram Gross Wt (gm/pc)</label>
       <input type="number" id="kiramWt" value="35" />
     </div>
     <div class="form-group">
-      <label>Kiram mn Scrap (gm/pc)</label>
+      <label>Kiram Scrap Wt (gm/pc)</label>
       <input type="number" id="kiramScrapWt" value="6" />
     </div>
     <div class="form-group">
-      <label>Bush, Screws & Fasteners (₹)</label>
+      <label>Hardware & Bush (₹)</label>
       <input type="number" id="hardwareCost" value="5.50" />
     </div>
     <div class="form-group">
-      <label>Inner Box & Packaging (₹)</label>
+      <label>Packaging Box (₹)</label>
       <input type="number" id="packCost" value="6.00" />
     </div>
   </div>
 
-  <!-- Section 2: Operations & Finishes -->
-  <div class="section-title">2. Processing, Hardware & Finishes</div>
+  <!-- Section 3: Operations & Finishes -->
+  <div class="section-title">3. Processing, Hardware & Finishes</div>
   <div class="grid-4">
     <div class="form-group">
       <label>Blanking & Press Work (₹)</label>
@@ -186,11 +281,11 @@
       <input type="number" id="laserCost" value="8.00" />
     </div>
     <div class="form-group">
-      <label>Buffing / High Mirror (₹)</label>
+      <label>Buffing / Mirror Finish (₹)</label>
       <input type="number" id="buffCost" value="9.00" />
     </div>
     <div class="form-group">
-      <label>Surface Plating / Coat</label>
+      <label>Surface Plating / Coating</label>
       <select id="coatingCost">
         <option value="0">None / Pure Polished</option>
         <option value="26">PVD Titanium Gold (+₹26)</option>
@@ -234,7 +329,8 @@
     <div class="card-box card-single">
       <h3>
         <span>Unit Cost Analysis (1 Piece)</span>
-        <span class="product-badge" id="outDisplayProductNameSingle">10" SS304 Deluxe (2 Kiram)</span>
+        <span class="product-badge" id="outDisplayProductNameSingle">Deluxe Heavy Sliding Aldrop</span>
+        <span class="spec-badge" id="outSpecBadgeSingle">Size: 10" (250mm) | Patta: 32x3.0mm | Rod: Ø12mm | Kiram: 25x3.0mm</span>
       </h3>
       <div class="row"><span>Net Finished Weight:</span><strong id="outNetWeight">0 gm</strong></div>
       <div class="row"><span>Net Raw Material (After Scrap):</span><strong id="outMatCost">₹0.00</strong></div>
@@ -248,7 +344,8 @@
     <div class="card-box card-batch">
       <h3>
         <span>Bulk Order Batch (<span id="outBatchQtyLabel">500</span> Pcs)</span>
-        <span class="product-badge" id="outDisplayProductNameBatch">10" SS304 Deluxe (2 Kiram)</span>
+        <span class="product-badge" id="outDisplayProductNameBatch">Deluxe Heavy Sliding Aldrop</span>
+        <span class="spec-badge" id="outSpecBadgeBatch">Size: 10" (250mm) | Patta: 32x3.0mm | Rod: Ø12mm | Kiram: 25x3.0mm</span>
       </h3>
       <div class="row"><span>Total Patta Sheet Needed:</span><strong id="outBatchSheet">0.0 kg</strong></div>
       <div class="row"><span>Total Rod Stock Needed:</span><strong id="outBatchRod">0.0 kg</strong></div>
@@ -268,11 +365,20 @@
 
 <script>
   const presets = {
-    '10_floral': { plateWt: 260, scrapWt: 40, rodWt: 180, rodScrapWt: 5, kiramWt: 35, kiramQty: 2, kiramScrapWt: 6, pressCost: 6.5, laserCost: 8, buffCost: 9, coatingCost: 0, hardwareCost: 5.5, packCost: 6 },
-    '10_plain': { plateWt: 240, scrapWt: 30, rodWt: 170, rodScrapWt: 5, kiramWt: 30, kiramQty: 2, kiramScrapWt: 5, pressCost: 5, laserCost: 0, buffCost: 7, coatingCost: 0, hardwareCost: 4.5, packCost: 5 },
-    '12_heavy': { plateWt: 320, scrapWt: 50, rodWt: 220, rodScrapWt: 6, kiramWt: 40, kiramQty: 3, kiramScrapWt: 7, pressCost: 8, laserCost: 10, buffCost: 12, coatingCost: 0, hardwareCost: 7, packCost: 8 },
-    '8_slim': { plateWt: 180, scrapWt: 22, rodWt: 130, rodScrapWt: 4, kiramWt: 28, kiramQty: 2, kiramScrapWt: 4, pressCost: 4.5, laserCost: 0, buffCost: 6, coatingCost: 0, hardwareCost: 4, packCost: 4.5 }
+    '10_floral': { plateWt: 260, scrapWt: 40, rodWt: 180, rodScrapWt: 5, kiramWt: 35, kiramQty: 2, kiramScrapWt: 6, pressCost: 6.5, laserCost: 8, buffCost: 9, coatingCost: 0, hardwareCost: 5.5, packCost: 6, itemLength: '10" (250mm)', pattaWidth: '32mm', pattaThickness: '3.0mm', rodDiameter: '12mm', kiramWidth: '25mm', kiramThickness: '3.0mm' },
+    '10_plain': { plateWt: 240, scrapWt: 30, rodWt: 170, rodScrapWt: 5, kiramWt: 30, kiramQty: 2, kiramScrapWt: 5, pressCost: 5, laserCost: 0, buffCost: 7, coatingCost: 0, hardwareCost: 4.5, packCost: 5, itemLength: '10" (250mm)', pattaWidth: '25mm', pattaThickness: '2.5mm', rodDiameter: '10mm', kiramWidth: '25mm', kiramThickness: '2.5mm' },
+    '12_heavy': { plateWt: 320, scrapWt: 50, rodWt: 220, rodScrapWt: 6, kiramWt: 40, kiramQty: 3, kiramScrapWt: 7, pressCost: 8, laserCost: 10, buffCost: 12, coatingCost: 0, hardwareCost: 7, packCost: 8, itemLength: '12" (300mm)', pattaWidth: '38mm', pattaThickness: '4.0mm', rodDiameter: '14mm', kiramWidth: '32mm', kiramThickness: '4.0mm' },
+    '8_slim': { plateWt: 180, scrapWt: 22, rodWt: 130, rodScrapWt: 4, kiramWt: 28, kiramQty: 2, kiramScrapWt: 4, pressCost: 4.5, laserCost: 0, buffCost: 6, coatingCost: 0, hardwareCost: 4, packCost: 4.5, itemLength: '8" (200mm)', pattaWidth: '19mm', pattaThickness: '2.0mm', rodDiameter: '8mm', kiramWidth: '19mm', kiramThickness: '2.0mm' }
   };
+
+  function onProductTypeChange() {
+    const type = document.getElementById('productType').value;
+    const nameInput = document.getElementById('customProductName');
+    if (type !== 'Custom') {
+      nameInput.value = `${type} Standard Series`;
+    }
+    updateProductTitles();
+  }
 
   function applyPreset() {
     const sel = document.getElementById('presetSelect');
@@ -289,12 +395,35 @@
   }
 
   function updateProductTitles() {
-    const name = document.getElementById('customProductName').value.trim() || 'Custom Aldrop';
-    document.getElementById('outDisplayProductNameSingle').textContent = name;
-    document.getElementById('outDisplayProductNameBatch').textContent = name;
+    const pType = document.getElementById('productType').value;
+    const pName = document.getElementById('customProductName').value.trim() || 'Custom Hardware';
+    const len = document.getElementById('itemLength').value;
+    const pattaW = document.getElementById('pattaWidth').value;
+    const pattaT = document.getElementById('pattaThickness').value;
+    const rodD = document.getElementById('rodDiameter').value;
+    const kiramW = document.getElementById('kiramWidth').value;
+    const kiramT = document.getElementById('kiramThickness').value;
+
+    const fullTitle = `${pName} (${pType})`;
+    const specText = `Size: ${len} | Patta: ${pattaW} x ${pattaT} | Rod: Ø${rodD} | Kiram: ${kiramW} x ${kiramT}`;
+
+    document.getElementById('outDisplayProductNameSingle').textContent = fullTitle;
+    document.getElementById('outDisplayProductNameBatch').textContent = fullTitle;
+    document.getElementById('outSpecBadgeSingle').textContent = specText;
+    document.getElementById('outSpecBadgeBatch').textContent = specText;
   }
 
-  document.getElementById('customProductName').addEventListener('input', updateProductTitles);
+  const inputs = document.querySelectorAll('input, select');
+  inputs.forEach(el => {
+    el.addEventListener('input', () => {
+      updateProductTitles();
+      calculateAll();
+    });
+    el.addEventListener('change', () => {
+      updateProductTitles();
+      calculateAll();
+    });
+  });
 
   let pwaPrompt;
   const banner = document.getElementById('installBanner');
@@ -310,9 +439,6 @@
       banner.style.display = 'none';
     }
   });
-
-  const inputs = document.querySelectorAll('input, select');
-  inputs.forEach(el => el.addEventListener('input', calculateAll));
 
   function calculateAll() {
     const matRate = parseFloat(document.getElementById('matRate').value) || 0;
@@ -340,7 +466,7 @@
     const ovhPct = parseFloat(document.getElementById('overheadPct').value) || 0;
     const marginPct = parseFloat(document.getElementById('marginPct').value) || 0;
 
-    // Weight & Scrap logic with Kiram
+    // Weight & Scrap calculations
     const totalKiramGross = kiramWt * kiramQty;
     const totalKiramScrap = kiramScrapWt * kiramQty;
 
@@ -379,7 +505,7 @@
     document.getElementById('outBatchTotalVal').textContent = '₹' + Math.round(unitExTax * batchQty).toLocaleString('en-IN');
     document.getElementById('outBatchInvoice').textContent = '₹' + Math.round(unitIncTax * batchQty).toLocaleString('en-IN');
 
-    // Visual Cost Progress Bar
+    // Visual Progress Bar
     const totalWithoutTax = unitExTax || 1;
     const pMat = (netMatCost / totalWithoutTax) * 100;
     const pProc = ((totalOps + overhead) / totalWithoutTax) * 100;
@@ -393,7 +519,7 @@
     const state = {};
     inputs.forEach(el => state[el.id] = el.value);
     localStorage.setItem('smart_aldrop_erp_state', JSON.stringify(state));
-    alert('Factory configuration saved successfully!');
+    alert('Complete engineering dimensions and costing saved!');
   }
 
   function loadActiveSettings() {
