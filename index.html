@@ -38,6 +38,7 @@
     .hint { font-size: 0.69rem; color: var(--muted); font-weight: 400; margin-top: -2px; margin-bottom: 2px; }
     input, select { padding: 9px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; outline: none; background: #fff; }
     input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(37,99,235,0.1); }
+    input:disabled, select:disabled { background: #f1f5f9; color: #94a3b8; cursor: not-allowed; border-color: #e2e8f0; }
 
     .quick-examples { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; padding: 8px 12px; background: #f1f5f9; border-radius: 8px; font-size: 0.78rem; }
     .quick-examples span { font-weight: 700; color: #475569; }
@@ -90,7 +91,7 @@
 <div class="erp-container">
   <div class="header">
     <div>
-      <h1>Hardware & Aldrop Precision ERP</h1>
+      <h1>Hardware, Aldrop & Handle ERP</h1>
       <p>Custom Engineering BOM Estimator with Scrap Recovery</p>
     </div>
     <button class="no-print" onclick="window.print()" style="padding: 8px 14px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; background: #fff; font-weight: 600;">🖨️ PDF / Print</button>
@@ -99,9 +100,9 @@
   <!-- Quick Demo Examples Toolbar -->
   <div class="quick-examples no-print">
     <span>💡 Quick Examples:</span>
-    <button type="button" class="btn-chip" onclick="loadExample('aldrop')">⚡ Load 10" Deluxe Aldrop</button>
-    <button type="button" class="btn-chip" onclick="loadExample('latch')">⚡ Load 8" Heavy Latch</button>
-    <button type="button" class="btn-chip" onclick="loadExample('handle')">⚡ Load 12" Pull Handle</button>
+    <button type="button" class="btn-chip" onclick="loadExample('aldrop')">⚡ 10" Deluxe Aldrop (Rod + Patta + Kiram)</button>
+    <button type="button" class="btn-chip" onclick="loadExample('latch')">⚡ 8" Heavy Latch</button>
+    <button type="button" class="btn-chip" onclick="loadExample('handle')">⚡ 12" Plate Handle (Only Patta)</button>
   </div>
 
   <!-- Section 1: Customer Product & Engineering Specs -->
@@ -109,17 +110,22 @@
   <div class="grid-4">
     <div class="form-group">
       <label>Product Category / Type</label>
-      <span class="hint">e.g., Aldrop, Door Latch, Handle, Tower Bolt</span>
-      <input type="text" id="productCategory" value="Aldrop" placeholder="e.g. Aldrop / Latch / Handle" />
+      <span class="hint">Aldrop, Latch ya Handle</span>
+      <select id="productCategory" onchange="onCategoryChanged()">
+        <option value="Aldrop" selected>Aldrop (Rod + Patta + Kiram)</option>
+        <option value="Latch">Door Latch (Rod + Patta + Kiram)</option>
+        <option value="Handle">Door Handle (Keval Patta / Plate Only)</option>
+        <option value="Custom">Custom Hardware</option>
+      </select>
     </div>
     <div class="form-group" style="grid-column: span 2;">
       <label>Custom Product Name / Model</label>
-      <span class="hint">e.g., 10" Floral Brass-Cut Antique Aldrop</span>
-      <input type="text" id="customProductName" value="10 inch Deluxe Antique Flora Model" placeholder="Enter custom item or client model name" />
+      <span class="hint">Customer jo bhi model likhna chahe</span>
+      <input type="text" id="customProductName" value="10 inch Deluxe Antique Flora Model" placeholder="e.g. 8 inch Fancy Plate Handle" />
     </div>
     <div class="form-group">
       <label>Material Grade</label>
-      <span class="hint">Select alloy specification</span>
+      <span class="hint">SS Grade ya Brass</span>
       <select id="ssGrade">
         <option value="SS 304" selected>SS 304 (Prime Non-Magnetic)</option>
         <option value="SS 202">SS 202 (Standard Commercial)</option>
@@ -129,21 +135,16 @@
     </div>
   </div>
 
-  <!-- Dimensions Row: Length, Widths, Thicknesses, Rod Dia -->
+  <!-- Dimensions Row -->
   <div class="grid-4" style="margin-top: 10px;">
     <div class="form-group">
       <label>Overall Length</label>
-      <span class="hint">e.g., 10" (250mm), 8" (200mm), 12"</span>
+      <span class="hint">e.g., 8" (200mm), 10" (250mm), 12"</span>
       <input type="text" id="itemLength" value="10 inch (250 mm)" placeholder="e.g. 10 inch (250 mm)" />
     </div>
     <div class="form-group">
-      <label>Rod Diameter (4mm to 19mm)</label>
-      <span class="hint">e.g., 12mm, 10mm, 14mm, 16mm</span>
-      <input type="text" id="rodDiameter" value="12 mm" placeholder="e.g. 12 mm (solid rod)" />
-    </div>
-    <div class="form-group">
       <label>Patta Width</label>
-      <span class="hint">e.g., 32mm, 25mm (1"), 38mm</span>
+      <span class="hint">e.g., 32mm, 38mm, 50mm</span>
       <input type="text" id="pattaWidth" value="32 mm" placeholder="e.g. 32 mm" />
     </div>
     <div class="form-group">
@@ -151,28 +152,33 @@
       <span class="hint">e.g., 3.0mm (10G), 2.5mm (12G)</span>
       <input type="text" id="pattaThickness" value="3.0 mm" placeholder="e.g. 3.0 mm" />
     </div>
+    <div class="form-group" id="groupRodDia">
+      <label>Rod Diameter (4mm to 19mm)</label>
+      <span class="hint">Handle mein use nahi hota</span>
+      <input type="text" id="rodDiameter" value="12 mm" placeholder="e.g. 12 mm" />
+    </div>
   </div>
 
-  <!-- Kiram Dimensions & Quantity -->
+  <!-- Kiram & Batch Qty Row -->
   <div class="grid-4" style="margin-top: 10px;">
-    <div class="form-group">
+    <div class="form-group" id="groupKiramWidth">
       <label>Kiram / Bracket Width</label>
-      <span class="hint">e.g., 25mm, 32mm, 19mm</span>
+      <span class="hint">Handle mein blank rahega</span>
       <input type="text" id="kiramWidth" value="25 mm" placeholder="e.g. 25 mm" />
     </div>
-    <div class="form-group">
+    <div class="form-group" id="groupKiramThick">
       <label>Kiram Thickness</label>
-      <span class="hint">e.g., 3.0mm, 4.0mm, 5.0mm</span>
+      <span class="hint">e.g., 3.0mm, 4.0mm</span>
       <input type="text" id="kiramThickness" value="3.0 mm" placeholder="e.g. 3.0 mm" />
     </div>
-    <div class="form-group">
+    <div class="form-group" id="groupKiramQty">
       <label>Kiram Qty (Per Piece)</label>
-      <span class="hint">e.g., 2 for standard, 3 for 12"+</span>
-      <input type="number" id="kiramQty" value="2" min="1" />
+      <span class="hint">Handle mein 0</span>
+      <input type="number" id="kiramQty" value="2" min="0" />
     </div>
     <div class="form-group">
       <label>Batch Order Quantity (Pcs)</label>
-      <span class="hint">e.g., 200, 500, 1000 pieces</span>
+      <span class="hint">Kitne piece ka order hai</span>
       <input type="number" id="batchQty" value="500" />
     </div>
   </div>
@@ -192,36 +198,36 @@
     </div>
     <div class="form-group">
       <label>Patta Gross Wt (gm)</label>
-      <span class="hint">Blank sheet cut weight</span>
+      <span class="hint">Keval patta sheet cut weight</span>
       <input type="number" id="plateWt" value="260" />
     </div>
     <div class="form-group">
       <label>Patta Scrap Wt (gm)</label>
-      <span class="hint">Punched out scrap metal</span>
+      <span class="hint">Patte ki cutting/punching scrap</span>
       <input type="number" id="scrapWt" value="40" />
     </div>
   </div>
 
   <!-- Weights: Rod & Kiram Section -->
   <div class="grid-4" style="margin-top: 10px;">
-    <div class="form-group">
+    <div class="form-group" id="groupRodGross">
       <label>Rod Gross Wt (gm)</label>
-      <span class="hint">Solid rod bar cut weight</span>
+      <span class="hint">Handle mein 0 gm</span>
       <input type="number" id="rodWt" value="180" />
     </div>
-    <div class="form-group">
+    <div class="form-group" id="groupRodScrap">
       <label>Rod Scrap Wt (gm)</label>
-      <span class="hint">Cut-off end wastage</span>
+      <span class="hint">Handle mein 0 gm</span>
       <input type="number" id="rodScrapWt" value="5" />
     </div>
-    <div class="form-group">
+    <div class="form-group" id="groupKiramGross">
       <label>Kiram Gross Wt (gm/pc)</label>
-      <span class="hint">Single guide bracket weight</span>
+      <span class="hint">Handle mein 0 gm</span>
       <input type="number" id="kiramWt" value="35" />
     </div>
-    <div class="form-group">
+    <div class="form-group" id="groupKiramScrap">
       <label>Kiram Scrap Wt (gm/pc)</label>
-      <span class="hint">Drill and bend scrap</span>
+      <span class="hint">Handle mein 0 gm</span>
       <input type="number" id="kiramScrapWt" value="6" />
     </div>
   </div>
@@ -295,7 +301,7 @@
       <h3>
         <span>Unit Cost Analysis (1 Piece)</span>
         <span class="product-badge" id="outDisplayProductNameSingle">10 inch Deluxe Antique Flora Model (Aldrop)</span>
-        <span class="spec-badge" id="outSpecBadgeSingle">Size: 10 inch (250 mm) | Rod: Ø12 mm | Patta: 32 mm x 3.0 mm | Kiram: 25 mm x 3.0 mm</span>
+        <span class="spec-badge" id="outSpecBadgeSingle">Size: 10 inch | Patta: 32 mm x 3.0 mm</span>
       </h3>
       <div class="row"><span>Net Finished Weight:</span><strong id="outNetWeight">0 gm</strong></div>
       <div class="row"><span>Net Raw Material (After Scrap):</span><strong id="outMatCost">₹0.00</strong></div>
@@ -310,11 +316,11 @@
       <h3>
         <span>Bulk Order Batch (<span id="outBatchQtyLabel">500</span> Pcs)</span>
         <span class="product-badge" id="outDisplayProductNameBatch">10 inch Deluxe Antique Flora Model (Aldrop)</span>
-        <span class="spec-badge" id="outSpecBadgeBatch">Size: 10 inch (250 mm) | Rod: Ø12 mm | Patta: 32 mm x 3.0 mm | Kiram: 25 mm x 3.0 mm</span>
+        <span class="spec-badge" id="outSpecBadgeBatch">Size: 10 inch | Patta: 32 mm x 3.0 mm</span>
       </h3>
       <div class="row"><span>Total Patta Sheet Needed:</span><strong id="outBatchSheet">0.0 kg</strong></div>
-      <div class="row"><span>Total Rod Stock Needed:</span><strong id="outBatchRod">0.0 kg</strong></div>
-      <div class="row"><span>Total Kiram Metal Needed:</span><strong id="outBatchKiram">0.0 kg</strong></div>
+      <div class="row" id="rowBatchRod"><span>Total Rod Stock Needed:</span><strong id="outBatchRod">0.0 kg</strong></div>
+      <div class="row" id="rowBatchKiram"><span>Total Kiram Metal Needed:</span><strong id="outBatchKiram">0.0 kg</strong></div>
       <div class="row"><span>Total Scrap Recoverable:</span><strong id="outBatchScrap">0.0 kg</strong></div>
       <div class="row"><span>Net Material Capital:</span><strong id="outBatchMatCap">₹0</strong></div>
       <div class="row total"><span>Batch Order Value:</span><span id="outBatchTotalVal">₹0</span></div>
@@ -329,7 +335,6 @@
 </div>
 
 <script>
-  // Customer Examples that can be prefilled with 1-click
   const examples = {
     aldrop: {
       productCategory: 'Aldrop',
@@ -343,10 +348,10 @@
       kiramThickness: '3.0 mm',
       kiramQty: 2,
       plateWt: 260, scrapWt: 40, rodWt: 180, rodScrapWt: 5, kiramWt: 35, kiramScrapWt: 6,
-      matRate: 210, scrapRate: 95, batchQty: 500
+      matRate: 210, scrapRate: 95, batchQty: 500, pressCost: 6.5, laserCost: 8, buffCost: 9
     },
     latch: {
-      productCategory: 'Door Latch',
+      productCategory: 'Latch',
       customProductName: '8" Heavy Duty Safety Latch',
       ssGrade: 'SS 202',
       itemLength: '8" (200 mm)',
@@ -357,23 +362,61 @@
       kiramThickness: '2.5 mm',
       kiramQty: 2,
       plateWt: 180, scrapWt: 25, rodWt: 120, rodScrapWt: 4, kiramWt: 25, kiramScrapWt: 4,
-      matRate: 140, scrapRate: 65, batchQty: 1000
+      matRate: 140, scrapRate: 65, batchQty: 1000, pressCost: 5, laserCost: 0, buffCost: 7
     },
     handle: {
-      productCategory: 'Pull Handle',
-      customProductName: '12" Commercial Entrance Main Handle',
+      productCategory: 'Handle',
+      customProductName: '8" Solid Plate Pull Handle',
       ssGrade: 'SS 304',
-      itemLength: '12" (300 mm)',
-      rodDiameter: '19 mm',
-      pattaWidth: '38 mm',
-      pattaThickness: '4.0 mm',
-      kiramWidth: '32 mm',
-      kiramThickness: '4.0 mm',
-      kiramQty: 2,
-      plateWt: 340, scrapWt: 50, rodWt: 310, rodScrapWt: 8, kiramWt: 50, kiramScrapWt: 8,
-      matRate: 210, scrapRate: 95, batchQty: 300
+      itemLength: '8" (200 mm)',
+      rodDiameter: 'N/A (Only Patta)',
+      pattaWidth: '40 mm',
+      pattaThickness: '3.0 mm',
+      kiramWidth: 'N/A',
+      kiramThickness: 'N/A',
+      kiramQty: 0,
+      plateWt: 190, scrapWt: 25, rodWt: 0, rodScrapWt: 0, kiramWt: 0, kiramScrapWt: 0,
+      matRate: 210, scrapRate: 95, batchQty: 500, pressCost: 4.5, laserCost: 5, buffCost: 8
     }
   };
+
+  function onCategoryChanged() {
+    const cat = document.getElementById('productCategory').value;
+    const isHandle = (cat === 'Handle');
+
+    // Rod & Kiram fields disabled for Handle
+    const rodFields = ['rodDiameter', 'rodWt', 'rodScrapWt'];
+    const kiramFields = ['kiramWidth', 'kiramThickness', 'kiramQty', 'kiramWt', 'kiramScrapWt'];
+
+    rodFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.disabled = isHandle;
+        if (isHandle && id.includes('Wt')) el.value = 0;
+        if (isHandle && id === 'rodDiameter') el.value = 'N/A (Only Patta)';
+      }
+    });
+
+    kiramFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.disabled = isHandle;
+        if (isHandle && (id.includes('Wt') || id === 'kiramQty')) el.value = 0;
+        if (isHandle && !id.includes('Wt') && id !== 'kiramQty') el.value = 'N/A';
+      }
+    });
+
+    // Hide/Show Batch rows for Rod & Kiram
+    document.getElementById('rowBatchRod').style.display = isHandle ? 'none' : 'flex';
+    document.getElementById('rowBatchKiram').style.display = isHandle ? 'none' : 'flex';
+
+    if (isHandle && document.getElementById('customProductName').value.includes('Aldrop')) {
+      document.getElementById('customProductName').value = '8 inch Fancy Plate Handle';
+    }
+
+    updateProductTitles();
+    calculateAll();
+  }
 
   function loadExample(key) {
     const data = examples[key];
@@ -382,23 +425,29 @@
       const el = document.getElementById(id);
       if (el) el.value = val;
     }
-    updateProductTitles();
-    calculateAll();
+    onCategoryChanged();
   }
 
   function updateProductTitles() {
-    const pCat = document.getElementById('productCategory').value.trim() || 'Product';
+    const pCat = document.getElementById('productCategory').value;
+    const isHandle = (pCat === 'Handle');
     const pName = document.getElementById('customProductName').value.trim() || 'Custom Model';
     const grade = document.getElementById('ssGrade').value;
     const len = document.getElementById('itemLength').value.trim() || 'Standard';
-    const rod = document.getElementById('rodDiameter').value.trim() || '12mm';
     const pattaW = document.getElementById('pattaWidth').value.trim() || '32mm';
     const pattaT = document.getElementById('pattaThickness').value.trim() || '3mm';
-    const kiramW = document.getElementById('kiramWidth').value.trim() || '25mm';
-    const kiramT = document.getElementById('kiramThickness').value.trim() || '3mm';
 
     const fullTitle = `${pName} (${pCat}) - [${grade}]`;
-    const specText = `Size: ${len} | Rod: Ø${rod} | Patta: ${pattaW} x ${pattaT} | Kiram: ${kiramW} x ${kiramT}`;
+    let specText = `Size: ${len} | Patta: ${pattaW} x ${pattaT}`;
+
+    if (!isHandle) {
+      const rod = document.getElementById('rodDiameter').value.trim() || '12mm';
+      const kiramW = document.getElementById('kiramWidth').value.trim() || '25mm';
+      const kiramT = document.getElementById('kiramThickness').value.trim() || '3mm';
+      specText += ` | Rod: Ø${rod} | Kiram: ${kiramW} x ${kiramT}`;
+    } else {
+      specText += ` | (Single Component: Keval Patta)`;
+    }
 
     document.getElementById('outDisplayProductNameSingle').textContent = fullTitle;
     document.getElementById('outDisplayProductNameBatch').textContent = fullTitle;
@@ -434,18 +483,20 @@
   });
 
   function calculateAll() {
+    const isHandle = (document.getElementById('productCategory').value === 'Handle');
+
     const matRate = parseFloat(document.getElementById('matRate').value) || 0;
     const scrapRate = parseFloat(document.getElementById('scrapRate').value) || 0;
     
     const plateWt = parseFloat(document.getElementById('plateWt').value) || 0;
     const scrapWt = parseFloat(document.getElementById('scrapWt').value) || 0;
     
-    const rodWt = parseFloat(document.getElementById('rodWt').value) || 0;
-    const rodScrapWt = parseFloat(document.getElementById('rodScrapWt').value) || 0;
+    const rodWt = isHandle ? 0 : (parseFloat(document.getElementById('rodWt').value) || 0);
+    const rodScrapWt = isHandle ? 0 : (parseFloat(document.getElementById('rodScrapWt').value) || 0);
 
-    const kiramWt = parseFloat(document.getElementById('kiramWt').value) || 0;
-    const kiramQty = parseInt(document.getElementById('kiramQty').value) || 0;
-    const kiramScrapWt = parseFloat(document.getElementById('kiramScrapWt').value) || 0;
+    const kiramWt = isHandle ? 0 : (parseFloat(document.getElementById('kiramWt').value) || 0);
+    const kiramQty = isHandle ? 0 : (parseInt(document.getElementById('kiramQty').value) || 0);
+    const kiramScrapWt = isHandle ? 0 : (parseFloat(document.getElementById('kiramScrapWt').value) || 0);
 
     const batchQty = parseInt(document.getElementById('batchQty').value) || 1;
 
@@ -512,7 +563,7 @@
     const state = {};
     inputs.forEach(el => state[el.id] = el.value);
     localStorage.setItem('smart_aldrop_erp_state', JSON.stringify(state));
-    alert('Custom specifications and configurations saved successfully!');
+    alert('Specifications saved successfully!');
   }
 
   function loadActiveSettings() {
@@ -523,7 +574,7 @@
         if (data[el.id] !== undefined) el.value = data[el.id];
       });
     }
-    updateProductTitles();
+    onCategoryChanged();
   }
 
   loadActiveSettings();
